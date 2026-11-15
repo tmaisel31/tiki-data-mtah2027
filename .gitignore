@@ -1,0 +1,78 @@
+# Tiki Data submission repository: never commit data, outputs or private material.
+# (tools/check_before_push.py checks the same things, and more, before every push.)
+
+# --- data folders and the competition's match data ---
+data/
+Data/
+DATA/
+tactical/
+*BAR-ATH*
+*bar-ath*
+*tactical_atd*
+*smart_tagging*
+*homography*
+
+# --- tables, including every submission or output CSV ("Tiki Data.csv", possession_v3_1.csv) ---
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.pkl
+*.pickle
+
+# --- match XML and TXT files: all XML, and every TXT except our four documentation / kit files ---
+*.xml
+*.txt
+!setup/RUN_THIS_FIRST_v3_1.txt
+!setup/POSSESSION_V3_1_FINGERPRINT.txt
+!setup/README_POSSESSION_V3_1_LEAD.txt
+!setup/README_PUBLIC_DATA.txt
+!setup/requirements_pinned.txt
+
+# --- video and audio ---
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.mkv
+*.avi
+*.m4v
+*.webm
+*.mpg
+*.mpeg
+*.mts
+*.m2ts
+*.wav
+*.mp3
+*.aac
+*.m4a
+*.flac
+*.ogg
+*.opus
+
+# --- pictures (frames saved from the video) ---
+*.png
+*.jpg
+*.jpeg
+*.heic
+
+# --- the team's private and working folders, caches, environments, secrets ---
+bench/
+claude_reports/
+private/
+cache/
+public_data/
+idsse_dataset/
+skillcorner/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.env
+.venv/
+env/
+*.part

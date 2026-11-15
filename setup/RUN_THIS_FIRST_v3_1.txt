@@ -1,0 +1,90 @@
+RUN THIS FIRST (v3.1) - rebuild the team's v3.1 LEAD file on a clean machine
+============================================================================
+(report 0410, 2026-11-11, from RUN_THIS_FIRST_v3_0.txt with v3.1's names; reference set by the human's first
+v3.1 run. Mac or Linux. Details and troubleshooting: README_POSSESSION_V3_1_LEAD.txt)
+
+READ THIS BEFORE ANYTHING ELSE
+  v3.1 is the LEAD VERSION (since 11 November: v3.0 with SSO-JOIN, the stoppage start from the ball
+  shown out). Which file is uploaded as the submission stays the human's decision. Use these steps when the team
+  asks you to rebuild v3.1.
+  The team's reference fingerprint: 80f4da2a7d76d506 (set 2026-11-11 by the human's first real run).
+
+  Tiki-Data's setup/ holds v3.1 files only once the human publishes them (the team switches):
+    setup/possession_v3_1_standalone.py     (the kit, the same file as the team's code folder's
+                                             teammate_kit/possession_v3_1_standalone.py)
+    setup/POSSESSION_V3_1_FINGERPRINT.txt   (the team's reference, one line:
+                                             POSSESSION V3.1 KIT FINGERPRINT: 80f4da2a7d76d506)
+  If setup/possession_v3_1_standalone.py is missing after  git pull , STOP: the team has not published v3.1.
+
+What this is
+  These steps rebuild possession_v3_1.csv from your copy of the match data and Tiki-Data's setup/, and check
+  that you got exactly the team's file: the last command must print MATCH.
+
+What you need
+  - the Tiki-Data repository with the v3.1 files above in setup/
+  - conda (Miniconda or Anaconda), and the network once, for the packages
+  - your own copy of the match data: the folder that holds tactical/ (the four BAR-ATH_tactical_* files)
+  - a few GB free and several minutes; nothing is downloaded during the run itself
+
+Every command below is typed in Terminal, inside the Tiki-Data folder (the one that holds setup/).
+Replace /path/to/DATA with your data folder.
+
+STEP 1. Get the repository (once), or update it
+    git clone https://github.com/brandonparikh/Tiki-Data.git
+    cd Tiki-Data
+  (already have it:  cd Tiki-Data  then  git pull)
+    ls setup/possession_v3_1_standalone.py setup/POSSESSION_V3_1_FINGERPRINT.txt
+  Both names must be listed. "No such file": STOP (see above).
+
+STEP 2. The environment (once): Python 3.11.17 and the exact pinned packages (the same versions as v1.9 to v3.0;
+        if you already made tiki-v1-9 or tiki-v2-0, you may use it:  conda activate tiki-v2-0  and go to step 3)
+    conda create -y -n tiki-v2-1 python=3.11.17
+    conda activate tiki-v2-1
+    python -m pip install -r setup/requirements_pinned.txt
+
+STEP 3. Your copy of the kit is the team's
+    shasum -a 256 setup/possession_v3_1_standalone.py setup/requirements_pinned.txt
+  must print exactly:
+    7ced9990555f5f7749d0c52668b2f5ae5d4203be4b6e4c154e991424498a7a12  setup/possession_v3_1_standalone.py
+    eb6136af45eae3c9281737dd28d9a0fde00c51bc353499bcd45ab195db16d78c  setup/requirements_pinned.txt
+  (Linux without shasum:  sha256sum  with the same two file names prints the same.)
+
+STEP 4. Your data is the team's
+    python setup/CHECK_EVERYTHING.py --data "/path/to/DATA/tactical"
+  NOTE: here --data is the tactical folder ITSELF. Expected last line:  READY: yes
+  (the full expected screen is in RUN_THIS_FIRST_v1_9.txt, step 4; it is the same for v3.1)
+
+STEP 5. Rebuild v3.1 (several minutes). The output folder must be OUTSIDE setup/ (the kit refuses otherwise).
+    mkdir -p ~/tiki_v3_1_output
+    python setup/possession_v3_1_standalone.py --data "/path/to/DATA" --out ~/tiki_v3_1_output | tee ~/tiki_v3_1_output/kit_screen.txt
+  NOTE: here --data is the folder ABOVE tactical (the one that holds tactical/).
+  Expected screen, in this order:
+    POSSESSION V3.1 KIT CHECK python: PASS
+    POSSESSION V3.1 KIT CHECK packages: PASS
+    POSSESSION V3.1 KIT CHECK sources: PASS
+    POSSESSION V3.1 KIT CHECK model: PASS
+    POSSESSION V3.1 KIT CHECK input files: PASS
+    POSSESSION V3.1 KIT CHECK records: PASS
+    POSSESSION V3.1 KIT CHECK modules: PASS
+    POSSESSION V3.1 KIT: possessions ... (first half ..., second half ...); dead share of graded frames ... percent
+    POSSESSION V3.1 KIT FILE: rows 199319; validator OK
+    POSSESSION V3.1 KIT RELEASE: PASS (5 of 5)
+    POSSESSION V3.1 KIT FINGERPRINT: 80f4da2a7d76d506
+  Reference fingerprint: 80f4da2a7d76d506 (possession_v3_1.py and this kit on the match wrote identical files by
+  shasum -a 256). The "possessions" line holds counts about the match: keep them inside the team.
+
+STEP 6. The MATCH check (compares your fingerprint with setup/POSSESSION_V3_1_FINGERPRINT.txt)
+  Copy the three lines exactly:
+    REF=$(sed -n 's/^POSSESSION V3\.1 KIT FINGERPRINT: \([0-9a-f]\{16\}\).*/\1/p' setup/POSSESSION_V3_1_FINGERPRINT.txt)
+    GOT=$(sed -n 's/^POSSESSION V3\.1 KIT FINGERPRINT: \([0-9a-f]\{16\}\)$/\1/p' ~/tiki_v3_1_output/kit_screen.txt)
+    if [ -n "$REF" ] && [ "$GOT" = "$REF" ]; then echo "V3.1 REBUILD: MATCH ($GOT)"; else echo "V3.1 REBUILD: MISMATCH (yours: ${GOT:-none}, team's: ${REF:-none})"; fi
+  Expected:
+    V3.1 REBUILD: MATCH (80f4da2a7d76d506)
+
+  MATCH     your possession_v3_1.csv is the team's v3.1 file, byte for byte.
+  MISMATCH  do not use or upload the file. "team's: none" means the fingerprint file is missing or not yet
+            published in setup/. Otherwise send the team the screen of steps 3 to 6
+            without the counts line of step 5. A fake (test) data bundle gives another fingerprint; that is expected.
+
+Safety (always): never commit or upload the match data, possession_v3_1.csv or kit_screen.txt to the repository,
+an online AI tool or a cloud drive.
