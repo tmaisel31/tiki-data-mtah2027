@@ -1,4 +1,4 @@
-# Tiki Data submission repository: never commit data, outputs or private material.
+# Tiki Data FC submission repository: never commit data, outputs or private material.
 # (tools/check_before_push.py checks the same things, and more, before every push.)
 
 # --- data folders and the competition's match data ---
@@ -12,7 +12,7 @@ tactical/
 *smart_tagging*
 *homography*
 
-# --- tables, including every submission or output CSV ("Tiki Data.csv", possession_v3_1.csv) ---
+# --- tables, including every submission or output CSV ("Tiki Data FC.csv", possession_v3_1.csv) ---
 *.csv
 *.tsv
 *.parquet

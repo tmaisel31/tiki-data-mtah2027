@@ -2,18 +2,24 @@
 
 ## 1. The organisers' code: metrica-sports/more-than-a-hack-2027 (MIT)
 
-`setup/possession_v3_1_standalone.py` embeds, unchanged, four files of the organisers' repository
-https://github.com/metrica-sports/more-than-a-hack-2027 (commit `f8f2629`). The kit checks each one's SHA-256 before
-it runs:
+Files from the organisers' repository https://github.com/metrica-sports/more-than-a-hack-2027 (commit `f8f2629`)
+appear in this repository in two places:
 
-| file in the organisers' repository | what the kit uses it for |
-|---|---|
-| `games.py` | the game's metadata and the paths of its input files |
-| `evaluation/validate_submission.py` | validating the output file (the organisers' own checks) |
-| `evaluation/possession_metrics.py` | the organisers' metric code, which the embedded modules import |
-| `starter/baseline.py` | the organisers' starter loaders, which the embedded modules import |
+- **`evaluation/`** holds unchanged, byte-identical copies of `evaluation/validate_submission.py` (the organisers' submission
+  validator), `evaluation/possession_metrics.py` and `games.py` (the two modules it imports; `games.py` sits beside
+  the validator, which looks in its own folder first), and the organisers' `LICENSE`.
+- **`setup/possession_v3_1_standalone.py`** embeds four of their files, unchanged. The kit checks each one's SHA-256
+  before it runs:
 
-Those files are under the organisers' MIT licence, reproduced here:
+  | file in the organisers' repository | what the kit uses it for |
+  |---|---|
+  | `games.py` | the game's metadata and the paths of its input files |
+  | `evaluation/validate_submission.py` | validating the output file (the organisers' own checks) |
+  | `evaluation/possession_metrics.py` | the organisers' metric code, which the embedded modules import |
+  | `starter/baseline.py` | the organisers' starter loaders, which the embedded modules import |
+
+Those files are under the organisers' MIT licence, reproduced here (also in `evaluation/LICENSE`, with the organisers'
+scope note):
 
 ```
 MIT License
@@ -43,17 +49,21 @@ As the organisers' licence states, it covers their code, documentation and publi
 not cover the match data (videos, tracking, Smart Tagging, homography), which is licensed for the competition only.
 None of that data is in this repository.
 
-## 2. Training data (public; not redistributed here)
+## 2. Public data (not redistributed here)
 
-The data is not in this repository. `setup/get_public_data.py` downloads it from the official sources.
+None of this data is in this repository. `setup/get_public_data.py` downloads the DFL / IDSSE and SkillCorner files
+from the official sources.
 
 - **DFL / IDSSE open dataset**: 7 Bundesliga and 2. Bundesliga matches (2022/23), positional and event data. Licence
   CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Source: figshare,
   https://doi.org/10.6084/m9.figshare.28196177.v1. Please cite: Bassek, M., Weber, H., Rein, R. and Memmert, D.
   (2025). An integrated dataset of spatiotemporal and event data in elite soccer. *Scientific Data*.
-  https://doi.org/10.1038/s41597-025-04505-y. Every embedded model was trained on these matches only.
+  https://doi.org/10.1038/s41597-025-04505-y. The embedded models were trained on these matches; no model was trained
+  on the provided match or on its ground truth.
 - **SkillCorner open data**: 3 A-League matches of broadcast tracking with per-frame possession. Licence MIT
-  (https://github.com/SkillCorner/opendata, LICENSE file). Used as public data for independent checks.
+  (https://github.com/SkillCorner/opendata, LICENSE file). Used for checks only; no model was trained on it.
+- **Metrica Sports sample data** (https://github.com/metrica-sports/sample-data): read only to understand the
+  provider's data and possession conventions. Not used to train any model and not redistributed here.
 
 ## 3. Python packages
 

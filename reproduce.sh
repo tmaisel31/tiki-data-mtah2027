@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rebuild Tiki Data's submission file ("Tiki Data.csv", possession v3.1) from the organisers' data bundle, and check
+# Rebuild Tiki Data FC's submission file ("Tiki Data FC.csv", possession v3.1) from the organisers' data bundle, and check
 # that it is byte for byte the team's file.
 #
 #     bash reproduce.sh [DATA_DIR] [OUT_DIR]
@@ -11,7 +11,7 @@
 # model by SHA-256, writes possession_v3_1.csv and validates it), saves the kit's screen to OUT_DIR/kit_screen.txt,
 # and compares the kit's FINGERPRINT line (the first 16 hex characters of the file's SHA-256) with
 # setup/POSSESSION_V3_1_FINGERPRINT.txt, exactly as step 6 of setup/RUN_THIS_FIRST_v3_1.txt. Only on a match does it
-# copy the file to OUT_DIR/"Tiki Data.csv". The last line is
+# copy the file to OUT_DIR/"Tiki Data FC.csv". The last line is
 #     V3.1 REBUILD: MATCH (80f4da2a7d76d506)
 # or a MISMATCH / STOPPED line (exit 1).
 set -u -o pipefail
@@ -58,7 +58,7 @@ else
     SHA=$(sha256sum "$OUT/possession_v3_1.csv" | cut -c1-16)
 fi
 [ "$SHA" = "$REF" ] || stop "the file's SHA-256 does not start with the fingerprint"
-cp "$OUT/possession_v3_1.csv" "$OUT/Tiki Data.csv" || stop "cannot write Tiki Data.csv"
-cmp -s "$OUT/possession_v3_1.csv" "$OUT/Tiki Data.csv" || stop "the copy differs"
-echo "Wrote $OUT/Tiki Data.csv"
+cp "$OUT/possession_v3_1.csv" "$OUT/Tiki Data FC.csv" || stop "cannot write Tiki Data FC.csv"
+cmp -s "$OUT/possession_v3_1.csv" "$OUT/Tiki Data FC.csv" || stop "the copy differs"
+echo "Wrote $OUT/Tiki Data FC.csv"
 echo "V3.1 REBUILD: MATCH ($GOT)"
